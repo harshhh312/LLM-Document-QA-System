@@ -1,0 +1,168 @@
+{
+  "doc_name": "THE ADVOCATES ACT, 1961.pdf",
+  "statistics": {
+    "total_pages": 36,
+    "total_words": 22986,
+    "total_characters": 143166,
+    "reading_time_min": 115,
+    "readability_score": 57.9,
+    "readability_label": "Fairly Difficult (High School)",
+    "language": "English",
+    "file_size": "317.6 KB",
+    "added_at": "2026-06-24 15:08"
+  },
+  "keywords": [
+    {
+      "word": "council",
+      "count": 452
+    },
+    {
+      "word": "shall",
+      "count": 293
+    },
+    {
+      "word": "state",
+      "count": 275
+    },
+    {
+      "word": "section",
+      "count": 253
+    },
+    {
+      "word": "india",
+      "count": 200
+    },
+    {
+      "word": "under",
+      "count": 164
+    },
+    {
+      "word": "court",
+      "count": 156
+    },
+    {
+      "word": "advocate",
+      "count": 138
+    },
+    {
+      "word": "advocates",
+      "count": 128
+    },
+    {
+      "word": "roll",
+      "count": 122
+    },
+    {
+      "word": "committee",
+      "count": 121
+    },
+    {
+      "word": "before",
+      "count": 115
+    },
+    {
+      "word": "disciplinary",
+      "count": 111
+    },
+    {
+      "word": "provisions",
+      "count": 105
+    },
+    {
+      "word": "person",
+      "count": 104
+    }
+  ],
+  "summary": "The Advocates Act, 1961 is a legislation that regulates the profession of advocates in India. The act provides for the establishment of Bar Councils at the state and national levels, which are responsible for governing the profession of advocates. The act also sets out the qualifications and requirements for enrollment as an advocate, and provides for the discipline and regulation of the profession. Additionally, the act repeals certain existing enactments related to legal practitioners.",
+  "key_points": [
+    {
+      "point": "The Advocates Act, 1961 regulates the profession of advocates in India.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "The act establishes Bar Councils at the state and national levels.",
+      "score": "Medium",
+      "page": 3
+    },
+    {
+      "point": "Advocates must be enrolled under this Act to practise in any court or before any authority or person.",
+      "score": "High",
+      "page": 33
+    },
+    {
+      "point": "The High Court may make rules laying down the conditions subject to which an advocate shall be permitted to practise in the High Court and the courts subordinate thereto.",
+      "score": "Medium",
+      "page": 34
+    },
+    {
+      "point": "The act repeals certain existing enactments related to legal practitioners.",
+      "score": "Low",
+      "page": 36
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Bar Councils",
+      "percentage": 40,
+      "mentions": 12,
+      "keywords": [
+        "State Bar Councils",
+        "Bar Council of India"
+      ]
+    },
+    {
+      "topic": "Advocates",
+      "percentage": 30,
+      "mentions": 8,
+      "keywords": [
+        "Enrollment",
+        "Practice"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [
+      {
+        "name": "Bar Council of India",
+        "mentions": 2
+      },
+      {
+        "name": "High Court",
+        "mentions": 1
+      }
+    ],
+    "dates": [
+      {
+        "name": "1960",
+        "mentions": 1
+      },
+      {
+        "name": "1956",
+        "mentions": 1
+      }
+    ],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective"
+    ],
+    "sections": [
+      {
+        "section": "CHAPTER I",
+        "sentiment": "Neutral",
+        "reason": "The chapter provides general information about the act."
+      },
+      {
+        "section": "CHAPTER III",
+        "sentiment": "Neutral",
+        "reason": "The chapter deals with admission and enrolment of advocates."
+      }
+    ]
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "doc_name": "ITact.pdf",
+  "statistics": {
+    "total_pages": 36,
+    "total_words": 22779,
+    "total_characters": 152835,
+    "reading_time_min": 114,
+    "readability_score": 38.3,
+    "readability_label": "Difficult (College)",
+    "language": "English",
+    "file_size": "812.8 KB",
+    "added_at": "2026-06-22 15:54"
+  },
+  "keywords": [
+    {
+      "word": "shall",
+      "count": 285
+    },
+    {
+      "word": "section",
+      "count": 278
+    },
+    {
+      "word": "electronic",
+      "count": 264
+    },
+    {
+      "word": "computer",
+      "count": 207
+    },
+    {
+      "word": "under",
+      "count": 178
+    },
+    {
+      "word": "signature",
+      "count": 176
+    },
+    {
+      "word": "government",
+      "count": 127
+    },
+    {
+      "word": "information",
+      "count": 118
+    },
+    {
+      "word": "person",
+      "count": 116
+    },
+    {
+      "word": "means",
+      "count": 102
+    },
+    {
+      "word": "digital",
+      "count": 95
+    },
+    {
+      "word": "certificate",
+      "count": 90
+    },
+    {
+      "word": "certifying",
+      "count": 84
+    },
+    {
+      "word": "central",
+      "count": 78
+    },
+    {
+      "word": "data",
+      "count": 74
+    }
+  ],
+  "summary": "The Information Technology Act, 2000 is a legislation that aims to promote electronic governance in India. The act provides legal recognition to electronic records and signatures, and outlines procedures for their authentication and use. It also establishes the liability of body corporates for wrongful loss or gain caused by negligence in implementing reasonable security practices and procedures. The act further defines electronic signature and electronic authentication technique and procedure. Overall, the act aims to facilitate the adoption of digital technologies in various sectors and promote transparency, accountability, and efficiency in governance.",
+  "key_points": [
+    {
+      "point": "The act provides legal recognition to electronic records and signatures.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "It outlines procedures for authentication and use of electronic records and signatures.",
+      "score": "Medium",
+      "page": 2
+    },
+    {
+      "point": "Body corporates are liable for wrongful loss or gain caused by negligence in implementing reasonable security practices and procedures.",
+      "score": "High",
+      "page": 4
+    },
+    {
+      "point": "The act defines electronic signature and electronic authentication technique and procedure.",
+      "score": "Medium",
+      "page": 5
+    },
+    {
+      "point": "It aims to promote transparency, accountability, and efficiency in governance.",
+      "score": "Low",
+      "page": 1
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Digital Governance",
+      "percentage": 40,
+      "mentions": 12,
+      "keywords": [
+        "electronic records",
+        "signatures",
+        "authentication"
+      ]
+    },
+    {
+      "topic": "Security and Liability",
+      "percentage": 30,
+      "mentions": 8,
+      "keywords": [
+        "reasonable security practices",
+        "wrongful loss or gain",
+        "liability"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [],
+    "dates": [
+      {
+        "name": "2000",
+        "mentions": 1
+      },
+      {
+        "name": "2009",
+        "mentions": 2
+      }
+    ],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective",
+      "Formal"
+    ],
+    "sections": [
+      {
+        "section": "Preliminary",
+        "sentiment": "Neutral",
+        "reason": "The section provides definitions and outlines the scope of the act."
+      },
+      {
+        "section": "Digital Signature and Electronic Signature",
+        "sentiment": "Neutral",
+        "reason": "The section defines electronic signature and outlines procedures for its authentication."
+      }
+    ]
+  }
+}

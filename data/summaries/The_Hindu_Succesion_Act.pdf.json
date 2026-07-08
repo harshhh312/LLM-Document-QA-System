@@ -1,0 +1,158 @@
+{
+  "doc_name": "The Hindu Succesion Act.pdf",
+  "statistics": {
+    "total_pages": 15,
+    "total_words": 8446,
+    "total_characters": 50969,
+    "reading_time_min": 42,
+    "readability_score": 44.0,
+    "readability_label": "Difficult (College)",
+    "language": "English",
+    "file_size": "251.1 KB",
+    "added_at": "2026-06-17 15:38"
+  },
+  "keywords": [
+    {
+      "word": "shall",
+      "count": 137
+    },
+    {
+      "word": "property",
+      "count": 122
+    },
+    {
+      "word": "hindu",
+      "count": 79
+    },
+    {
+      "word": "deceased",
+      "count": 75
+    },
+    {
+      "word": "succession",
+      "count": 71
+    },
+    {
+      "word": "section",
+      "count": 70
+    },
+    {
+      "word": "daughter",
+      "count": 70
+    },
+    {
+      "word": "heirs",
+      "count": 68
+    },
+    {
+      "word": "interest",
+      "count": 52
+    },
+    {
+      "word": "intestate",
+      "count": 48
+    },
+    {
+      "word": "case",
+      "count": 35
+    },
+    {
+      "word": "child",
+      "count": 32
+    },
+    {
+      "word": "partition",
+      "count": 32
+    },
+    {
+      "word": "before",
+      "count": 31
+    },
+    {
+      "word": "person",
+      "count": 30
+    }
+  ],
+  "summary": "The Hindu Succession Act, 1956 is a legislation that governs the inheritance and devolution of property among Hindus in India. The act provides for the rules of succession among heirs, including the order of distribution among agnates and cognates. It also outlines the rights of females to inherit property and the manner of distribution among their heirs. The act aims to provide a clear and uniform framework for the resolution of disputes related to inheritance and devolution of property among Hindus.",
+  "key_points": [
+    {
+      "point": "The Act provides for the rules of succession among heirs, including the order of distribution among agnates and cognates.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "Females have the right to inherit property and the manner of distribution among their heirs is outlined in the act.",
+      "score": "Medium",
+      "page": 2
+    },
+    {
+      "point": "The Act provides for the computation of degrees of relationship among agnates and cognates.",
+      "score": "Low",
+      "page": 3
+    },
+    {
+      "point": "The property of a female Hindu is her absolute property, and she has the right to dispose of it as she sees fit.",
+      "score": "High",
+      "page": 4
+    },
+    {
+      "point": "The Act provides for the distribution of property among heirs in class I and II of the Schedule.",
+      "score": "Medium",
+      "page": 5
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Inheritance Rights",
+      "percentage": 40,
+      "mentions": 12,
+      "keywords": [
+        "Hindu Succession Act",
+        "property",
+        "inheritance"
+      ]
+    },
+    {
+      "topic": "Rules of Succession",
+      "percentage": 30,
+      "mentions": 10,
+      "keywords": [
+        "agnates",
+        "cognates",
+        "order of distribution"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [],
+    "dates": [
+      {
+        "name": "9-9-2005",
+        "mentions": 1
+      }
+    ],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective",
+      "Factual"
+    ],
+    "sections": [
+      {
+        "section": "CHAPTER I",
+        "sentiment": "Neutral",
+        "reason": "The chapter provides an overview of the act and its purpose."
+      },
+      {
+        "section": "CHAPTER II",
+        "sentiment": "Neutral",
+        "reason": "The chapter outlines the rules of succession among heirs."
+      }
+    ]
+  }
+}

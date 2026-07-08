@@ -1,0 +1,168 @@
+{
+  "doc_name": "THE WATER (PREVENTION AND CONTROL OF POLLUTION) ACT, 1974.pdf",
+  "statistics": {
+    "total_pages": 30,
+    "total_words": 20550,
+    "total_characters": 126467,
+    "reading_time_min": 103,
+    "readability_score": 49.1,
+    "readability_label": "Difficult (College)",
+    "language": "English",
+    "file_size": "488.6 KB",
+    "added_at": "2026-06-20 22:53"
+  },
+  "keywords": [
+    {
+      "word": "board",
+      "count": 392
+    },
+    {
+      "word": "section",
+      "count": 331
+    },
+    {
+      "word": "state",
+      "count": 281
+    },
+    {
+      "word": "shall",
+      "count": 232
+    },
+    {
+      "word": "under",
+      "count": 226
+    },
+    {
+      "word": "government",
+      "count": 205
+    },
+    {
+      "word": "central",
+      "count": 187
+    },
+    {
+      "word": "case",
+      "count": 108
+    },
+    {
+      "word": "person",
+      "count": 99
+    },
+    {
+      "word": "water",
+      "count": 94
+    },
+    {
+      "word": "pollution",
+      "count": 71
+    },
+    {
+      "word": "stream",
+      "count": 67
+    },
+    {
+      "word": "clause",
+      "count": 67
+    },
+    {
+      "word": "functions",
+      "count": 61
+    },
+    {
+      "word": "time",
+      "count": 60
+    }
+  ],
+  "summary": [
+    "The Water (Prevention and Control of Pollution) Act, 1974 is a legislation aimed at preventing and controlling water pollution in India. The act establishes the Central and State Boards for Prevention and Control of Water Pollution to oversee the implementation of measures to prevent and control water pollution. The act also provides for the constitution of Joint Boards to examine plants, records, and other material objects related to water pollution. Additionally, the act outlines the procedures for filing appeals, preparing budgets, and maintaining accounts of the State Board.",
+    "The act emphasizes the importance of preventing and controlling water pollution, recognizing that it is a serious environmental issue that requires concerted efforts from all stakeholders. The legislation provides a framework for the prevention and control of water pollution, including measures to inspect and seize plants, records, and other material objects related to water pollution.",
+    "In conclusion, the Water (Prevention and Control of Pollution) Act, 1974 is an important piece of legislation that aims to prevent and control water pollution in India. The act establishes a framework for the prevention and control of water pollution, provides for the constitution of Joint Boards, and outlines procedures for filing appeals, preparing budgets, and maintaining accounts.",
+    "Overall, the act demonstrates a commitment to environmental protection and highlights the importance of preventing and controlling water pollution."
+  ],
+  "key_points": [
+    {
+      "point": "The Water (Prevention and Control of Pollution) Act, 1974 is a legislation aimed at preventing and controlling water pollution in India.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "The act establishes the Central and State Boards for Prevention and Control of Water Pollution to oversee the implementation of measures to prevent and control water pollution.",
+      "score": "Medium",
+      "page": 2
+    },
+    {
+      "point": "The act provides for the constitution of Joint Boards to examine plants, records, and other material objects related to water pollution.",
+      "score": "High",
+      "page": 3
+    },
+    {
+      "point": "The act outlines procedures for filing appeals, preparing budgets, and maintaining accounts of the State Board.",
+      "score": "Medium",
+      "page": 4
+    },
+    {
+      "point": "The act emphasizes the importance of preventing and controlling water pollution, recognizing that it is a serious environmental issue that requires concerted efforts from all stakeholders.",
+      "score": "High",
+      "page": 5
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Water Pollution Prevention and Control",
+      "percentage": 60,
+      "mentions": 15,
+      "keywords": [
+        "water",
+        "pollution",
+        "prevention",
+        "control"
+      ]
+    },
+    {
+      "topic": "Environmental Protection",
+      "percentage": 20,
+      "mentions": 5,
+      "keywords": [
+        "environmental",
+        "protection",
+        "conservation"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [
+      {
+        "name": "Central Boards",
+        "mentions": 2
+      },
+      {
+        "name": "State Boards",
+        "mentions": 3
+      }
+    ],
+    "dates": [],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective",
+      "Factual"
+    ],
+    "sections": [
+      {
+        "section": "Preliminary",
+        "sentiment": "Neutral",
+        "reason": "The section provides definitions and outlines the scope of the act."
+      },
+      {
+        "section": "Joint Boards",
+        "sentiment": "Neutral",
+        "reason": "The section outlines the procedures for the constitution and functioning of Joint Boards."
+      }
+    ]
+  }
+}

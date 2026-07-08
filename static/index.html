@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusDoc AI - RAG Chatbot</title>
+    <!-- Google Fonts: Outfit (Headings) and Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/explorer.css">
+</head>
+<body>
+    <!-- Connection Warning Banner -->
+    <div id="connection-banner" class="status-banner hidden">
+        <div class="banner-content">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Backend server not running. Please start the server with: <code>python run.py</code></span>
+        </div>
+        <button id="retry-connection-btn" class="btn-retry">
+            <i class="fa-solid fa-arrows-rotate"></i> Retry Connection
+        </button>
+    </div>
+    <div class="app-container">
+        <!-- Sidebar (Left Panel - 280px) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h1>NexusDoc <span>AI</span></h1>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Document Management Section -->
+                <div class="sidebar-section document-section">
+                    <div class="section-header">
+                        <h3><i class="fa-solid fa-folder-open"></i> Documents</h3>
+                    </div>
+                    
+                    <!-- Drag & Drop Zone -->
+                    <div id="drop-zone" class="drop-zone">
+                        <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                        <p class="drop-text">Drag & drop files here</p>
+                        <p class="drop-subtext">Supports PDF, TXT, MD (Max 10MB)</p>
+                        <label for="file-input" class="btn btn-outline btn-sm file-label">
+                            Browse Files
+                        </label>
+                        <input type="file" id="file-input" multiple accept=".pdf,.txt,.md,.markdown" style="display: none;">
+                    </div>
+
+                    <!-- Progress indicator -->
+                    <div id="upload-progress-container" class="upload-progress-container hidden">
+                        <div class="progress-info">
+                            <span id="upload-filename">document.pdf</span>
+                            <span id="upload-status-text">Uploading...</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Active Document List -->
+                    <div class="document-list-container">
+                        <div class="list-header-row">
+                            <h4>Active Indexes</h4>
+                            <span class="doc-badge"><span id="doc-count">0</span> docs</span>
+                        </div>
+                        <div id="document-list" class="document-list">
+                            <div class="empty-docs-placeholder">
+                                <i class="fa-solid fa-file-invoice placeholder-icon"></i>
+                                <p>No documents uploaded yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section (Collapsible) -->
+                <div class="sidebar-section settings-section">
+                    <div class="section-header collapsible-header" onclick="toggleSection('settings-body')">
+                        <h3><i class="fa-solid fa-sliders"></i> Configuration</h3>
+                        <i id="settings-toggle-icon" class="fa-solid fa-chevron-down toggle-icon"></i>
+                    </div>
+                    
+                    <div id="settings-body" class="settings-body hidden">
+                        <!-- Provider select hidden input -->
+                        <input type="hidden" id="provider-select" value="ollama">
+
+                        <div class="advanced-settings-toggle" onclick="toggleSection('advanced-settings')">
+                            <span>Advanced Settings</span>
+                            <i id="advanced-toggle-icon" class="fa-solid fa-plus icon-small"></i>
+                        </div>
+                        
+                        <div id="advanced-settings" class="advanced-settings-body hidden">
+                            <div class="form-row">
+                                <div class="form-group half-width">
+                                    <label for="chunk-size-input">Chunk Size</label>
+                                    <input type="number" id="chunk-size-input" value="600" min="200" max="2000" step="100">
+                                </div>
+                                <div class="form-group half-width">
+                                    <label for="chunk-overlap-input">Chunk Overlap</label>
+                                    <input type="number" id="chunk-overlap-input" value="100" min="0" max="500" step="50">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="temperature-slider">Temperature: <span id="temp-val">0.3</span></label>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="temperature-slider" min="0" max="1" step="0.1" value="0.3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="save-settings-btn" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Apply Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <div class="workspace-area">
+            <!-- Split Pane 1: Document Explorer (hidden by default) -->
+            <section id="document-explorer" class="document-explorer hidden">
+                <!-- Sidebar toggleable panels inside explorer -->
+                <div class="explorer-sidebar" id="explorer-sidebar">
+                    <div class="explorer-sidebar-header">
+                        <button class="ex-tab-btn active" onclick="switchExplorerTab('ex-toc')" id="btn-ex-toc" title="Table of Contents"><i class="fa-solid fa-list-ol"></i></button>
+                        <button class="ex-tab-btn" onclick="switchExplorerTab('ex-map')" id="btn-ex-map" title="Document Structure Map"><i class="fa-solid fa-network-wired"></i></button>
+                        <button class="ex-tab-btn" onclick="switchExplorerTab('ex-annotations')" id="btn-ex-annotations" title="Bookmarks & Highlights"><i class="fa-solid fa-bookmark"></i></button>
+                        <button class="ex-tab-btn" onclick="switchExplorerTab('ex-thumbnails')" id="btn-ex-thumbnails" title="Page Thumbnails & Heatmap"><i class="fa-solid fa-images"></i></button>
+                    </div>
+                    <div class="explorer-sidebar-content">
+                        <!-- TOC Tab -->
+                        <div id="ex-toc" class="ex-tab-content">
+                            <div class="ex-panel-title">Table of Contents</div>
+                            <div id="explorer-toc-list" class="explorer-toc-list">
+                                <!-- Dynamic TOC items -->
+                            </div>
+                        </div>
+                        <!-- Document Map Tree Tab -->
+                        <div id="ex-map" class="ex-tab-content hidden">
+                            <div class="ex-panel-title">Structure Mindmap</div>
+                            <div id="explorer-map-tree" class="explorer-map-tree">
+                                <!-- Dynamic Tree Mindmap -->
+                            </div>
+                        </div>
+                        <!-- Bookmarks & Highlights Tab -->
+                        <div id="ex-annotations" class="ex-tab-content hidden">
+                            <div class="ex-panel-title">Bookmarks & Highlights</div>
+                            <div class="annotations-actions">
+                                <button id="btn-add-bookmark" class="btn btn-outline btn-xs" onclick="addCurrentPageBookmark()"><i class="fa-solid fa-plus"></i> Bookmark</button>
+                                <button class="btn btn-outline btn-xs" onclick="exportAnnotations()"><i class="fa-solid fa-download"></i> Export MD</button>
+                            </div>
+                            <div class="annotation-subsections">
+                                <h4>Bookmarks</h4>
+                                <div id="explorer-bookmarks-list" class="annotations-list">
+                                    <div class="empty-annotation-placeholder">No bookmarks added yet.</div>
+                                </div>
+                                <h4 style="margin-top: 15px;">Highlights</h4>
+                                <div id="explorer-highlights-list" class="annotations-list">
+                                    <div class="empty-annotation-placeholder">No highlights created yet.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thumbnails Tab -->
+                        <div id="ex-thumbnails" class="ex-tab-content hidden">
+                            <div class="ex-panel-title">Thumbnails & Heatmap</div>
+                            <div id="explorer-thumbnails-list" class="explorer-thumbnails-list">
+                                <!-- Page thumbnail cards -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area of Explorer -->
+                <div class="explorer-main">
+                    <!-- Explorer Top Bar -->
+                    <div class="explorer-topbar">
+                        <div class="topbar-left">
+                            <button id="toggle-explorer-sidebar" class="icon-btn" onclick="toggleExplorerSidebar()" title="Toggle explorer sidebar">
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+                            <div id="explorer-breadcrumb" class="explorer-breadcrumb">No document loaded</div>
+                        </div>
+                        <div class="topbar-center">
+                            <button class="icon-btn" onclick="prevSection()" title="Previous Section"><i class="fa-solid fa-circle-left"></i></button>
+                            <div class="page-nav">
+                                <input type="number" id="explorer-page-input" value="1" min="1" max="1" onchange="jumpToPageInput()">
+                                <span id="explorer-page-total">/ 1</span>
+                            </div>
+                            <button class="icon-btn" onclick="nextSection()" title="Next Section"><i class="fa-solid fa-circle-right"></i></button>
+                        </div>
+                        <div class="topbar-right">
+                            <div class="search-box">
+                                <input type="text" id="explorer-search-input" placeholder="Search in doc..." oninput="onSearchInput()">
+                                <span id="search-match-count" class="search-match-count">0/0</span>
+                                <button class="icon-btn" id="btn-search-prev" onclick="navigateSearch(-1)" disabled><i class="fa-solid fa-chevron-up"></i></button>
+                                <button class="icon-btn" id="btn-search-next" onclick="navigateSearch(1)" disabled><i class="fa-solid fa-chevron-down"></i></button>
+                                <button class="icon-btn" id="btn-search-options" onclick="toggleSearchOptions()" title="Search Options"><i class="fa-solid fa-sliders"></i></button>
+                                <div id="search-options-dropdown" class="search-options-dropdown hidden">
+                                    <label><input type="checkbox" id="search-case-sensitive" onchange="onSearchInput()"> Case sensitive</label>
+                                    <label><input type="checkbox" id="search-whole-word" onchange="onSearchInput()"> Whole word</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline btn-sm close-explorer-btn" onclick="closeExplorer()" title="Close document exploration"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Explorer Viewport -->
+                    <div id="explorer-pages-viewport" class="explorer-pages-viewport">
+                        <div class="no-doc-placeholder">
+                            <i class="fa-solid fa-book-open placeholder-icon"></i>
+                            <p>Select a document and click "Explore" in the sidebar to open the workspace.</p>
+                        </div>
+                    </div>
+
+                    <!-- Floating Selection Toolbar -->
+                    <div id="text-selection-toolbar" class="text-selection-toolbar hidden">
+                        <button onclick="askAboutSelection()" class="selection-action-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Ask AI</button>
+                        <span class="selection-separator">|</span>
+                        <button onclick="highlightSelection('yellow')" class="hl-color-btn hl-yellow" title="Yellow"></button>
+                        <button onclick="highlightSelection('pink')" class="hl-color-btn hl-pink" title="Pink"></button>
+                        <button onclick="highlightSelection('green')" class="hl-color-btn hl-green" title="Green"></button>
+                        <button onclick="highlightSelection('blue')" class="hl-color-btn hl-blue" title="Blue"></button>
+                    </div>
+
+                    <!-- Explorer Bottom Bar -->
+                    <div class="explorer-bottombar">
+                        <div class="progress-container-wrapper">
+                            <span class="progress-label">Progress</span>
+                            <div class="progress-bar-bg-mini">
+                                <div id="explorer-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                            </div>
+                            <span id="explorer-progress-percent" class="progress-percent">0%</span>
+                        </div>
+                        <div id="explorer-reading-time" class="reading-time-est">Remaining: -- min</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Draggable resizing Splitter -->
+            <div id="workspace-splitter" class="workspace-splitter hidden"></div>
+
+            <!-- Main Chat Area (Right Panel) -->
+            <main class="chat-container">
+            <!-- Clean Header with Status Indicator and Tabs -->
+            <header class="chat-header">
+                <div class="chat-header-info">
+                    <div class="workspace-tabs">
+                        <button id="tab-chat" class="tab-btn active" onclick="switchTab('chat')">
+                            <i class="fa-solid fa-comments"></i> Chat Workspace
+                        </button>
+                        <button id="tab-insights" class="tab-btn" onclick="switchTab('insights')">
+                            <i class="fa-solid fa-chart-pie"></i> Document Insights
+                        </button>
+                    </div>
+                </div>
+                <div class="nav-status">
+                    <span id="api-status-badge" class="badge badge-disconnected">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Checking Status...</span>
+                    </span>
+                </div>
+            </header>
+
+            <!-- Chat Messages Container -->
+            <div id="chat-messages" class="chat-messages">
+                <div class="welcome-card">
+                    <div class="welcome-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h2>Ask anything about your documents</h2>
+                    <p>Upload files like manuals, code documentation, or PDFs, and chat with them instantly using local Ollama. Your context stays strictly relevant.</p>
+                    
+                    <div class="quick-start-suggestions">
+                        <h4>Quick start examples:</h4>
+                        <div class="suggestions-grid">
+                            <button class="suggestion-btn" onclick="useSuggestion('Summarize the main points of the uploaded document.')">
+                                "Summarize the main points..."
+                            </button>
+                            <button class="suggestion-btn" onclick="useSuggestion('What are the key findings or takeaways?')">
+                                "What are the key findings?"
+                            </button>
+                            <button class="suggestion-btn" onclick="useSuggestion('Find any action items or critical deadlines.')">
+                                "Find action items..."
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area (Fixed at bottom) -->
+            <div id="chat-input-container" class="chat-input-area">
+                <div class="chat-actions">
+                    <button id="clear-chat-btn" class="icon-btn-text" title="Clear chat history">
+                        <i class="fa-solid fa-trash-can"></i> Clear Chat
+                    </button>
+                    <span class="char-counter"><span id="char-count">0</span> chars</span>
+                </div>
+                <form id="chat-form" class="chat-form">
+                    <textarea id="chat-input" placeholder="Ask a question about your documents... (Shift + Enter for new line)" rows="1"></textarea>
+
+                    <!-- Voice Input Button -->
+                    <div class="voice-input-wrapper" id="voice-input-wrapper">
+                        <!-- Live Waveform Bars (visible while recording) -->
+                        <div class="voice-waveform" id="voice-waveform" aria-hidden="true">
+                            <span class="waveform-bar"></span>
+                            <span class="waveform-bar"></span>
+                            <span class="waveform-bar"></span>
+                            <span class="waveform-bar"></span>
+                            <span class="waveform-bar"></span>
+                        </div>
+                        <!-- Mic Button -->
+                        <button type="button" id="voice-btn" class="btn-voice" title="Click to speak your question" aria-label="Start voice input">
+                            <i class="fa-solid fa-microphone" id="voice-btn-icon"></i>
+                            <!-- Pulse ring (shown while recording) -->
+                            <span class="voice-pulse-ring" id="voice-pulse-ring"></span>
+                        </button>
+                    </div>
+
+                    <button type="submit" id="send-btn" class="btn btn-send" disabled>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+
+                <!-- Voice Status Badge (floats above input area) -->
+                <div id="voice-status-badge" class="voice-status-badge hidden">
+                    <span class="voice-status-dot"></span>
+                    <span id="voice-status-text">Listening…</span>
+                    <button class="voice-cancel-btn" id="voice-cancel-btn" title="Cancel">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Insights Dashboard Container (Hidden by default) -->
+            <div id="insights-view" class="insights-container hidden">
+                <div class="insights-dashboard-header">
+                    <div class="insights-controls">
+                        <div class="control-group">
+                            <label for="insight-doc-select"><i class="fa-solid fa-file-pdf"></i> Selected Document:</label>
+                            <select id="insight-doc-select" onchange="loadActiveDocInsights()">
+                                <option value="">-- Select a document --</option>
+                            </select>
+                        </div>
+                        <div class="btn-group-dashboard">
+                            <button id="btn-compare" class="btn btn-outline btn-sm" onclick="toggleComparisonMode()">
+                                <i class="fa-solid fa-code-compare"></i> Compare Documents
+                            </button>
+                            <button id="btn-export-pdf" class="btn btn-outline btn-sm" onclick="exportDashboardPDF()">
+                                <i class="fa-solid fa-print"></i> Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty Selection state -->
+                <div id="insights-empty-state" class="insights-empty-state">
+                    <i class="fa-solid fa-chart-simple empty-state-icon"></i>
+                    <h3>No Document Selected</h3>
+                    <p>Select a document from the dropdown above, or click the analytics icon (<i class="fa-solid fa-chart-line"></i>) next to a document in the library sidebar.</p>
+                </div>
+
+                <!-- Insights Loading state -->
+                <div id="insights-loading-state" class="insights-loading-state hidden">
+                    <div class="loading-spinner">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    </div>
+                    <h3>Running Document Analysis...</h3>
+                    <p>Computing stats, parsing categories, and generating summary. First analysis can take up to 30 seconds on local LLMs.</p>
+                </div>
+
+                <!-- Standard Insights Dashboard Panel -->
+                <div id="insights-dashboard" class="insights-dashboard hidden">
+                    <div class="insights-grid">
+                        <!-- 1. Executive Summary -->
+                        <div class="insight-card card-full">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-file-contract"></i> Executive Summary</h3>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline btn-xs btn-copy-summary" onclick="copySummaryToClipboard()" title="Copy to clipboard">
+                                        <i class="fa-solid fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div id="insights-summary-text" class="summary-text-block">
+                                    Summary loading...
+                                </div>
+                                <div class="summary-meta">
+                                    <span class="meta-tag"><i class="fa-solid fa-paragraph"></i> <span id="summary-word-count">0</span> words</span>
+                                    <span class="meta-tag"><i class="fa-solid fa-font"></i> <span id="summary-char-count">0</span> characters</span>
+                                </div>
+                                
+                                <div class="summary-regenerate-block">
+                                    <div class="input-with-action">
+                                        <input type="text" id="summary-focus-input" placeholder="Generate summary with specific focus (e.g. key risks, financial results, action items...)">
+                                        <button id="btn-regenerate-summary" class="btn btn-primary" onclick="regenerateActiveSummary()">
+                                            <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Document Statistics Card -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-calculator"></i> Document Metrics</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="stats-list">
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-file-lines text-primary-color"></i> Total Pages:</span>
+                                        <span id="stat-pages" class="stat-value">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-arrow-down-a-z text-primary-color"></i> Word Count:</span>
+                                        <span id="stat-words" class="stat-value">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-clock text-primary-color"></i> Est. Reading Time:</span>
+                                        <span id="stat-reading-time" class="stat-value">- min</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-language text-primary-color"></i> Language Detected:</span>
+                                        <span id="stat-language" class="stat-value">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-database text-primary-color"></i> File Size:</span>
+                                        <span id="stat-file-size" class="stat-value">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label"><i class="fa-solid fa-calendar-day text-primary-color"></i> Upload Date:</span>
+                                        <span id="stat-uploaded" class="stat-value">-</span>
+                                    </div>
+                                </div>
+                                <div class="readability-block">
+                                    <div class="readability-header">
+                                        <span>Readability (Flesch Ease)</span>
+                                        <span id="readability-score" class="readability-score">-</span>
+                                    </div>
+                                    <div class="readability-progress-bg">
+                                        <div id="readability-progress-bar" class="readability-progress-bar" style="width: 0%;"></div>
+                                    </div>
+                                    <div id="readability-label" class="readability-label">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Key Points Extraction with Importance Scoring -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-list-check"></i> Key Findings</h3>
+                            </div>
+                            <div class="card-content overflow-card">
+                                <div id="insights-key-points-list" class="key-points-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Topic Clustering -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-circle-nodes"></i> Topics & Themes</h3>
+                            </div>
+                            <div class="card-content chart-card-content">
+                                <div class="chart-container-doughnut">
+                                    <canvas id="topicChart"></canvas>
+                                </div>
+                                <div id="insights-topics-list" class="insights-topics-list">
+                                    <!-- List details -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Sentiment Analysis -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-face-smile"></i> Sentiment & Tone</h3>
+                            </div>
+                            <div class="card-content overflow-card">
+                                <div class="sentiment-meter-block">
+                                    <div class="sentiment-header">
+                                        <span>Overall Document Sentiment</span>
+                                        <span id="sentiment-badge" class="sentiment-badge">-</span>
+                                    </div>
+                                    <div class="gauge-bg">
+                                        <div id="sentiment-gauge-needle" class="gauge-needle" style="left: 50%;"></div>
+                                    </div>
+                                    <div class="gauge-labels">
+                                        <span>Negative</span>
+                                        <span>Neutral</span>
+                                        <span>Positive</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="tones-block">
+                                    <h4>Emotional Tone Indicators</h4>
+                                    <div id="sentiment-tones" class="tones-container">
+                                        <!-- Tones tags -->
+                                    </div>
+                                </div>
+
+                                <div class="sections-sentiment-block">
+                                    <h4>Section Breakdown</h4>
+                                    <div id="sentiment-sections-list" class="section-sentiment-list">
+                                        <!-- Section sentiment items -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Keyword Frequency Analysis -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-chart-simple"></i> Keyword Frequency</h3>
+                            </div>
+                            <div class="card-content chart-card-content">
+                                <div class="chart-container-bar">
+                                    <canvas id="keywordChart"></canvas>
+                                </div>
+                                <div class="word-cloud-wrapper">
+                                    <h4>Keyword Tag Cloud (Click to query)</h4>
+                                    <div id="keyword-cloud" class="word-cloud">
+                                        <!-- Word cloud tags -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Named Entity Recognition -->
+                        <div class="insight-card">
+                            <div class="card-title">
+                                <h3><i class="fa-solid fa-tags"></i> Named Entity Recognition</h3>
+                            </div>
+                            <div class="card-content overflow-card">
+                                <div class="entity-tabs">
+                                    <button id="ent-tab-people" class="entity-tab-btn active" onclick="switchEntityTab('people')">People</button>
+                                    <button id="ent-tab-orgs" class="entity-tab-btn" onclick="switchEntityTab('organizations')">Orgs</button>
+                                    <button id="ent-tab-dates" class="entity-tab-btn" onclick="switchEntityTab('dates')">Dates</button>
+                                    <button id="ent-tab-locations" class="entity-tab-btn" onclick="switchEntityTab('locations')">Locations</button>
+                                    <button id="ent-tab-money" class="entity-tab-btn" onclick="switchEntityTab('monetary_values')">Money</button>
+                                </div>
+                                <div id="entity-list-content" class="entity-list-content">
+                                    <!-- Entity list items -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Dashboard Panel -->
+                <div id="comparison-dashboard" class="comparison-dashboard hidden">
+                    <div class="comparison-selectors">
+                        <div class="comp-col">
+                            <label for="comp-doc-1">Document 1 (Base):</label>
+                            <select id="comp-doc-1" onchange="runComparison()">
+                                <option value="">-- Select document 1 --</option>
+                            </select>
+                        </div>
+                        <div class="comp-col">
+                            <label for="comp-doc-2">Document 2 (Compare):</label>
+                            <select id="comp-doc-2" onchange="runComparison()">
+                                <option value="">-- Select document 2 --</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline btn-sm" onclick="toggleComparisonMode()">
+                            <i class="fa-solid fa-circle-left"></i> Exit Compare
+                        </button>
+                    </div>
+
+                    <div id="comp-empty-state" class="comp-empty-state">
+                        <i class="fa-solid fa-right-left comp-icon-large"></i>
+                        <h3>Cross-Document Comparison</h3>
+                        <p>Select two indexed documents from the dropdown menus above to start a side-by-side comparative analysis.</p>
+                    </div>
+
+                    <div id="comp-insights" class="comp-insights hidden">
+                        <!-- Comparative Summaries -->
+                        <div class="comp-section-row">
+                            <div class="comp-half-card">
+                                <h3 id="comp-title-1">Doc 1 Summary</h3>
+                                <div id="comp-summary-1" class="comp-summary-text"></div>
+                            </div>
+                            <div class="comp-half-card">
+                                <h3 id="comp-title-2">Doc 2 Summary</h3>
+                                <div id="comp-summary-2" class="comp-summary-text"></div>
+                            </div>
+                        </div>
+
+                        <!-- Statistics comparison table -->
+                        <div class="comp-card-full">
+                            <h3>Metrics Matrix</h3>
+                            <table class="comp-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th id="comp-tbl-header-1">Document 1</th>
+                                        <th id="comp-tbl-header-2">Document 2</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Total Pages</td>
+                                        <td id="comp-pages-1">-</td>
+                                        <td id="comp-pages-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Word Count</td>
+                                        <td id="comp-words-1">-</td>
+                                        <td id="comp-words-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flesch Ease (Readability)</td>
+                                        <td id="comp-read-1">-</td>
+                                        <td id="comp-read-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overall Sentiment</td>
+                                        <td id="comp-sent-1">-</td>
+                                        <td id="comp-sent-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Est. Reading Time</td>
+                                        <td id="comp-time-1">-</td>
+                                        <td id="comp-time-2">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Overlapping & Unique Topics -->
+                        <div class="comp-section-row">
+                            <div class="comp-half-card">
+                                <h3>Common Shared Topics</h3>
+                                <div id="comp-shared-topics" class="topics-pills"></div>
+                            </div>
+                            <div class="comp-half-card">
+                                <h3>Unique Document Elements</h3>
+                                <div class="unique-split">
+                                    <div class="unique-col">
+                                        <h4 id="comp-unique-hdr-1">Unique to Doc 1</h4>
+                                        <ul id="comp-unique-1" class="unique-list"></ul>
+                                    </div>
+                                    <div class="unique-col">
+                                        <h4 id="comp-unique-hdr-2">Unique to Doc 2</h4>
+                                        <ul id="comp-unique-2" class="unique-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Keyword Cross Chart -->
+                        <div class="comp-card-full">
+                            <h3>Cross-Document Keyword Frequency Overlap</h3>
+                            <div class="chart-container-comp-bar">
+                                <canvas id="compKeywordChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-notification" class="toast hidden">
+        <i class="toast-icon fa-solid fa-circle-info"></i>
+        <span class="toast-message">Notification message here</span>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

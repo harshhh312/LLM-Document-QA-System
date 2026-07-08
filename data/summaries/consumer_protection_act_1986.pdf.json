@@ -1,0 +1,165 @@
+{
+  "doc_name": "consumer_protection_act_1986.pdf",
+  "statistics": {
+    "total_pages": 24,
+    "total_words": 15756,
+    "total_characters": 97996,
+    "reading_time_min": 79,
+    "readability_score": 53.7,
+    "readability_label": "Fairly Difficult (High School)",
+    "language": "English",
+    "file_size": "526.6 KB",
+    "added_at": "2026-06-23 12:31"
+  },
+  "keywords": [
+    {
+      "word": "shall",
+      "count": 202
+    },
+    {
+      "word": "commission",
+      "count": 171
+    },
+    {
+      "word": "state",
+      "count": 164
+    },
+    {
+      "word": "district",
+      "count": 137
+    },
+    {
+      "word": "section",
+      "count": 120
+    },
+    {
+      "word": "forum",
+      "count": 118
+    },
+    {
+      "word": "goods",
+      "count": 94
+    },
+    {
+      "word": "national",
+      "count": 81
+    },
+    {
+      "word": "under",
+      "count": 81
+    },
+    {
+      "word": "government",
+      "count": 81
+    },
+    {
+      "word": "provided",
+      "count": 78
+    },
+    {
+      "word": "made",
+      "count": 74
+    },
+    {
+      "word": "complaint",
+      "count": 71
+    },
+    {
+      "word": "person",
+      "count": 69
+    },
+    {
+      "word": "consumer",
+      "count": 68
+    }
+  ],
+  "summary": "The Consumer Protection Act, 1986 is a legislation aimed at protecting the interests of consumers in India. The act establishes various consumer protection councils and agencies to address disputes between consumers and businesses. The act also outlines procedures for complaints and appeals, as well as the jurisdiction of these agencies. Additionally, the act provides for the establishment of a Central Consumer Protection Council and State Consumer Protection Councils to oversee the implementation of the act's provisions. Overall, the act aims to promote fair trade practices and ensure that consumers are protected from unfair or deceptive business practices.",
+  "key_points": [
+    {
+      "point": "The act establishes various consumer protection councils and agencies to address disputes between consumers and businesses.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "The Central Consumer Protection Council is responsible for overseeing the implementation of the act's provisions.",
+      "score": "Medium",
+      "page": 4
+    },
+    {
+      "point": "The State Consumer Protection Councils are established to oversee the implementation of the act's provisions at the state level.",
+      "score": "Medium",
+      "page": 7
+    },
+    {
+      "point": "The District Consumer Protection Council is responsible for addressing consumer disputes at the district level.",
+      "score": "Low",
+      "page": 8
+    },
+    {
+      "point": "The act provides for the establishment of a State Commission to hear appeals from the District Forum.",
+      "score": "High",
+      "page": 16
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Consumer Protection Councils",
+      "percentage": 40,
+      "mentions": 12,
+      "keywords": [
+        "Central Consumer Protection Council",
+        "State Consumer Protection Councils"
+      ]
+    },
+    {
+      "topic": "Dispute Resolution",
+      "percentage": 30,
+      "mentions": 8,
+      "keywords": [
+        "District Forum",
+        "State Commission"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [
+      {
+        "name": "Government of India",
+        "mentions": 2
+      }
+    ],
+    "dates": [
+      {
+        "name": "1986",
+        "mentions": 1
+      },
+      {
+        "name": "1974",
+        "mentions": 1
+      }
+    ],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective",
+      "Factual"
+    ],
+    "sections": [
+      {
+        "section": "Preliminary",
+        "sentiment": "Neutral",
+        "reason": "The section provides definitions and explains the scope of the act."
+      },
+      {
+        "section": "Consumer Disputes Redressal Agencies",
+        "sentiment": "Neutral",
+        "reason": "The section outlines the procedures for complaints and appeals."
+      }
+    ]
+  }
+}

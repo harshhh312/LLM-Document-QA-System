@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
   {
     "id": "b42c1278-7e9c-4045-b0da-d76ca7753348",
@@ -15,4 +16,23 @@
     "color": "pink",
     "created_at": "2026-06-24 15:14:30"
   }
+=======
+[
+  {
+    "id": "b42c1278-7e9c-4045-b0da-d76ca7753348",
+    "doc_name": "consumer_protection_act_1986.pdf",
+    "page": 1,
+    "text": "encies. \n10. Composition of the District Forum. \n11. Jurisdiction of the District Forum. \n12. Manner in which complaint shall be made. \n13. Procedure on admissio",
+    "color": "yellow",
+    "created_at": "2026-06-24 15:03:24"
+  },
+  {
+    "id": "b638136f-6ab7-4914-b799-71dbca192a80",
+    "doc_name": "consumer_protection_act_1986.pdf",
+    "page": 3,
+    "text": "BE it enacted by Parliament in the Thirty-seventh Year of the Republic of India as follows:— \nCHAPTER I \nPRELIMINARY \n1. Short title, extent, commencement and application.—(1) This Act may be called the  Consu",
+    "color": "pink",
+    "created_at": "2026-06-24 15:14:30"
+  }
+>>>>>>> 0b277982b6513d3180ebb54eb7ade1cc6ba0fc9e
 ]

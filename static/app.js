@@ -2498,7 +2498,6 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-<<<<<<< HEAD
 // ============================================================
 // VOICE INPUT — VoiceInputController
 // Uses the browser Web Speech API (no dependencies, no backend).
@@ -2732,6 +2731,3 @@ class VoiceInputController {
 
 // Instantiate once — hooks into DOMContentLoaded internally
 const voiceInput = new VoiceInputController();
-=======
-
->>>>>>> 0b277982b6513d3180ebb54eb7ade1cc6ba0fc9e

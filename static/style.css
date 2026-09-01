@@ -946,11 +946,49 @@ input[type="range"]::-webkit-slider-thumb:hover {
    CHAT INPUT CONTROLS (Fixed bottom area)
    ========================================================================== */
 .chat-input-area {
-    padding: 1.25rem 2rem 1.75rem 2rem;
+    padding: 0.75rem 2rem 1.75rem 2rem;
     border-top: 1px solid var(--border-color);
     background-color: var(--card-bg);
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.02);
     position: relative; /* Needed for voice-status-badge absolute positioning */
+}
+
+/* Document Selector Row in Chat */
+.chat-doc-selector-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    padding: 0.4rem 0.75rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.07), rgba(118, 75, 162, 0.05));
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--radius-sm);
+}
+
+.chat-doc-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary-start);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.chat-doc-select {
+    flex: 1;
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.15rem 0.25rem;
+    font-weight: 500;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -2503,3 +2541,20 @@ body.banner-active .app-container {
     font-style: italic;
 }
 
+/* ==========================================================================
+   MIND MAP LOGIC
+   ========================================================================== */
+.mindmap-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+#mindmap-container {
+    flex: 1;
+    min-height: 500px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background: #fafafa !important;
+}

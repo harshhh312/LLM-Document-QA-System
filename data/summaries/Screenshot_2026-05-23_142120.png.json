@@ -1,0 +1,156 @@
+{
+  "doc_name": "Screenshot 2026-05-23 142120.png",
+  "statistics": {
+    "total_pages": 1,
+    "total_words": 38,
+    "total_characters": 277,
+    "reading_time_min": 1,
+    "readability_score": 10.2,
+    "readability_label": "Very Difficult (College Graduate)",
+    "language": "English",
+    "file_size": "57.7 KB",
+    "added_at": "2026-09-01 17:22"
+  },
+  "keywords": [
+    {
+      "word": "batteries",
+      "count": 1
+    },
+    {
+      "word": "bluetooth",
+      "count": 1
+    },
+    {
+      "word": "cameras",
+      "count": 1
+    },
+    {
+      "word": "computer",
+      "count": 1
+    },
+    {
+      "word": "acpi",
+      "count": 1
+    },
+    {
+      "word": "based",
+      "count": 1
+    },
+    {
+      "word": "enovo",
+      "count": 1
+    },
+    {
+      "word": "disk",
+      "count": 1
+    },
+    {
+      "word": "drives",
+      "count": 1
+    },
+    {
+      "word": "display",
+      "count": 1
+    },
+    {
+      "word": "adapters",
+      "count": 1
+    },
+    {
+      "word": "intel",
+      "count": 1
+    },
+    {
+      "word": "graphics",
+      "count": 1
+    },
+    {
+      "word": "nvidia",
+      "count": 1
+    },
+    {
+      "word": "geforce",
+      "count": 1
+    }
+  ],
+  "summary": "This document appears to be a technical specifications sheet for a computer system. The main topic is the hardware components and their capabilities. The key arguments are the various features of the system, including batteries, Bluetooth connectivity, cameras, and graphics processing units. The conclusions drawn from this information suggest that the system is well-equipped for multimedia tasks and has advanced graphics capabilities. However, the document does not provide any information on the system's performance or user experience.",
+  "key_points": [
+    {
+      "point": "The computer system features Intel(R) UHD Graphics",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "It also includes NVIDIA GeForce RTX 4050 Laptop GPU for advanced graphics processing",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "The system has Bluetooth connectivity and cameras",
+      "score": "Medium",
+      "page": 1
+    },
+    {
+      "point": "It features a ACPI x64-based PC architecture",
+      "score": "Low",
+      "page": 1
+    },
+    {
+      "point": "The computer has various hardware components, including disk drives and display adapters",
+      "score": "Medium",
+      "page": 2
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Graphics Processing",
+      "percentage": 40,
+      "mentions": 3,
+      "keywords": [
+        "Intel(R)",
+        "UHD",
+        "NVIDIA",
+        "GeForce"
+      ]
+    },
+    {
+      "topic": "Computer Architecture",
+      "percentage": 20,
+      "mentions": 2,
+      "keywords": [
+        "ACPI",
+        "x64-based"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [
+      {
+        "name": "Intel(R)",
+        "mentions": 1
+      },
+      {
+        "name": "NVIDIA",
+        "mentions": 1
+      }
+    ],
+    "dates": [],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective"
+    ],
+    "sections": [
+      {
+        "section": "Introduction",
+        "sentiment": "Neutral",
+        "reason": "The document provides a factual overview of the computer system's hardware components."
+      }
+    ]
+  }
+}

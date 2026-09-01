@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "root",
+      "label": "Document Title",
+      "type": "root",
+      "page": 1
+    },
+    {
+      "id": "node1",
+      "label": "Introduction",
+      "type": "topic",
+      "page": 1,
+      "parent": "root"
+    },
+    {
+      "id": "node2",
+      "label": "Pre-onboarding Training Program",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node1"
+    },
+    {
+      "id": "node3",
+      "label": "Note 1: Your employment with Capgemini will be conclusive on you executing the Offer with Capgemini which shall contain details including the scope, terms and conditions of your employment and the contractual obligation with Capgemini.",
+      "type": "concept",
+      "page": 2,
+      "parent": "node2"
+    },
+    {
+      "id": "node4",
+      "label": "Note 2: After commencement of employment you will be on probation for a period of six months from your date of joining and subject to the probation policy of the Company your employment will be confirmed.",
+      "type": "concept",
+      "page": 3,
+      "parent": "node2"
+    },
+    {
+      "id": "node5",
+      "label": "ANNEXURE 1 Harsh Chaudhari, Analyst Your all-inclusive annual target compensation (on a cost to company basis) will be INR 4,00,000 (Rupees Four Lakh only) . Subject to the terms of the LOI and on completion of 1 year of service from your date of joining the employment of Capgemini, you will receive fixed one-time incentive of INR 25,000(Rupees Twenty Five Thousand only).",
+      "type": "concept",
+      "page": 4,
+      "parent": "node2"
+    },
+    {
+      "id": "node6",
+      "label": "ANNEXURE 2 Documents for LOI acceptance SSC Certificate1. HSC Certificate2. Diploma all marksheets3. Diploma provisional certificate/ Degree Certificate4. If Graduation, marksheets upto 6th Semester5. Diploma provisional certificate/ Degree Certificate4. If Graduation, marksheets upto 6th Semester5. If Post Graduation, all Graduation Marksheets, Graduation Degree Certificate and marksheets upto second semester for Post Graduation 6. Passport size photo7. Government ID Proof8.",
+      "type": "concept",
+      "page": 5,
+      "parent": "node2"
+    }
+  ],
+  "edges": [
+    {
+      "source": "root",
+      "target": "node1"
+    },
+    {
+      "source": "node1",
+      "target": "node2"
+    },
+    {
+      "source": "node2",
+      "target": "node3"
+    },
+    {
+      "source": "node2",
+      "target": "node4"
+    },
+    {
+      "source": "node2",
+      "target": "node5"
+    },
+    {
+      "source": "node2",
+      "target": "node6"
+    }
+  ],
+  "doc_name": "Capgemini Loi.pdf"
+}

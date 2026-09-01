@@ -21,6 +21,21 @@ let reconnectIntervalId = null;
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
     setupEventListeners();
+
+    // --- URL / YouTube input listeners ---
+    const urlBtn = document.getElementById('process-url-btn');
+    if (urlBtn) {
+        urlBtn.addEventListener('click', processURL);
+    }
+    const urlInput = document.getElementById('url-input');
+    if (urlInput) {
+        urlInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                processURL();
+            }
+        });
+    }
 });
 
 // ============================================================
@@ -429,12 +444,20 @@ async function saveConfig() {
 }
 
 // ============================================================
-// FILE UPLOAD
+// FILE UPLOAD – Multi-format support
 // ============================================================
+
 function handleFiles(files) {
     if (!files || files.length === 0) return;
 
     const uploadQueue = Array.from(files);
+    
+    // All supported extensions
+    const ALLOWED_EXTENSIONS = [
+        '.pdf', '.docx', '.doc', '.pptx', '.ppt',
+        '.xlsx', '.xls', '.md', '.txt',
+        '.jpg', '.jpeg', '.png', '.bmp', '.tiff'
+    ];
 
     const uploadNext = async () => {
         if (uploadQueue.length === 0) {
@@ -444,12 +467,12 @@ function handleFiles(files) {
             return;
         }
 
-        const file    = uploadQueue.shift();
+        const file = uploadQueue.shift();
         const fileExt = '.' + file.name.split('.').pop().toLowerCase();
 
         // Validate extension
-        if (!['.pdf', '.txt', '.md', '.markdown'].includes(fileExt)) {
-            showToast(`"${file.name}" has an unsupported format.`, 'error');
+        if (!ALLOWED_EXTENSIONS.includes(fileExt)) {
+            showToast(`"${file.name}" has an unsupported format. Supported: PDF, DOCX, PPTX, XLSX, MD, TXT, Images`, 'error');
             uploadNext();
             return;
         }
@@ -515,14 +538,83 @@ async function performUpload(file) {
 }
 
 // ============================================================
+// URL / YOUTUBE PROCESSING
+// ============================================================
+
+async function processURL() {
+    const urlInput = document.getElementById('url-input');
+    const url = urlInput.value.trim();
+    
+    if (!url) {
+        showToast('Please enter a URL or YouTube link', 'warning');
+        return;
+    }
+    
+    const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+    const type = isYouTube ? 'youtube' : 'url';
+    
+    const btn = document.getElementById('process-url-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ Processing...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/documents/url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, type })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            showToast(`✅ Successfully processed: ${data.title || 'URL'}`, 'success');
+            urlInput.value = '';
+            await loadDocuments();
+        } else {
+            const err = await response.json();
+            showToast(err.detail || 'Failed to process URL', 'error');
+        }
+    } catch (error) {
+        showToast('Network error while processing URL', 'error');
+        console.error('URL processing error:', error);
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+}
+
+// ============================================================
 // DOCUMENT LIST
 // ============================================================
+
+function getFormatIcon(ext) {
+    const formats = {
+        '.pdf':   { icon: 'fa-file-pdf', label: 'PDF', color: '#fc8181' },
+        '.docx':  { icon: 'fa-file-word', label: 'Word', color: '#4299e1' },
+        '.doc':   { icon: 'fa-file-word', label: 'Word (Legacy)', color: '#4299e1' },
+        '.pptx':  { icon: 'fa-file-powerpoint', label: 'PowerPoint', color: '#f6ad55' },
+        '.ppt':   { icon: 'fa-file-powerpoint', label: 'PowerPoint (Legacy)', color: '#f6ad55' },
+        '.xlsx':  { icon: 'fa-file-excel', label: 'Excel', color: '#48bb78' },
+        '.xls':   { icon: 'fa-file-excel', label: 'Excel (Legacy)', color: '#48bb78' },
+        '.md':    { icon: 'fa-file-code', label: 'Markdown', color: '#9f7aea' },
+        '.txt':   { icon: 'fa-file-lines', label: 'Text', color: '#718096' },
+        '.jpg':   { icon: 'fa-file-image', label: 'Image', color: '#ed64a6' },
+        '.jpeg':  { icon: 'fa-file-image', label: 'Image', color: '#ed64a6' },
+        '.png':   { icon: 'fa-file-image', label: 'Image', color: '#ed64a6' },
+        '.bmp':   { icon: 'fa-file-image', label: 'Image', color: '#ed64a6' },
+        '.tiff':  { icon: 'fa-file-image', label: 'Image', color: '#ed64a6' },
+        'url':    { icon: 'fa-link', label: 'Web Page', color: '#667eea' },
+        'youtube':{ icon: 'fa-play', label: 'YouTube', color: '#e53e3e' },
+    };
+    return formats[ext] || { icon: 'fa-file', label: 'Document', color: '#718096' };
+}
+
 async function loadDocuments() {
-    const docCount    = document.getElementById('doc-count');
+    const docCount = document.getElementById('doc-count');
     const documentList = document.getElementById('document-list');
 
     try {
-        const res  = await fetch('/api/documents');
+        const res = await fetch('/api/documents');
         const docs = await res.json();
 
         state.activeDocuments = docs;
@@ -535,41 +627,56 @@ async function loadDocuments() {
                 <div class="empty-docs-placeholder">
                     <i class="fa-solid fa-file-excel placeholder-icon"></i>
                     <p>No documents uploaded yet.</p>
+                    <small>Upload PDF, Word, Excel, PowerPoint, Images, or paste a URL</small>
                 </div>`;
             return;
         }
 
         documentList.innerHTML = '';
         docs.forEach(doc => {
-            let iconClass = 'fa-file-lines';
-            if (doc.doc_name.endsWith('.pdf')) iconClass = 'fa-file-pdf';
-            if (doc.doc_name.endsWith('.md') || doc.doc_name.endsWith('.markdown')) iconClass = 'fa-file-code';
+            const fileName = doc.doc_name || doc.file_name || 'Untitled';
+            const ext = doc.file_ext || doc.format || '.pdf';
+            const iconInfo = getFormatIcon(ext);
+            
+            // Get file size
+            let fileSize = doc.file_size || 'Unknown size';
+            if (typeof fileSize === 'number') {
+                fileSize = fileSize < 1024 
+                    ? `${fileSize} B` 
+                    : fileSize < 1024 * 1024 
+                        ? `${(fileSize / 1024).toFixed(1)} KB` 
+                        : `${(fileSize / (1024 * 1024)).toFixed(1)} MB`;
+            }
 
             const item = document.createElement('div');
             item.className = 'document-item';
             item.innerHTML = `
-                <div class="doc-info" title="${escapeHtml(doc.doc_name)}">
-                    <i class="fa-solid ${iconClass} doc-icon"></i>
+                <div class="doc-info" title="${escapeHtml(fileName)}">
+                    <i class="fa-solid ${iconInfo.icon} doc-icon" style="color: ${iconInfo.color}"></i>
                     <div>
-                        <div class="doc-name">${escapeHtml(doc.doc_name)}</div>
-                        <div class="doc-meta">${doc.file_size} • ${doc.chunk_count} chunks</div>
+                        <div class="doc-name">${escapeHtml(fileName)}</div>
+                        <div class="doc-meta">
+                            ${iconInfo.label} • 
+                            ${doc.chunk_count || doc.word_count || 0} chunks • 
+                            ${fileSize}
+                        </div>
                     </div>
                 </div>
                 <div class="doc-actions">
                     <button class="btn-insight-doc"
-                        onclick="viewDocInsights('${encodeURIComponent(doc.doc_name)}')"
+                        onclick="viewDocInsights('${encodeURIComponent(fileName)}')"
                         title="View insights dashboard">
                         <i class="fa-solid fa-chart-line"></i>
                     </button>
-                    <button class="btn-delete-doc"
-                        onclick="deleteDocument('${encodeURIComponent(doc.doc_name)}')"
-                        title="Delete from index">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
                     <button class="btn-explore-doc"
-                        onclick="openDocumentExplorer('${encodeURIComponent(doc.doc_name)}')"
+                        onclick="openDocumentExplorer('${encodeURIComponent(fileName)}')"
                         title="Explore document">
                         <i class="fa-solid fa-compass"></i>
+                    </button>
+                    <button class="btn-delete-doc"
+                        onclick="deleteDocument('${encodeURIComponent(fileName)}')"
+                        title="Delete from index">
+                        <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>`;
             documentList.appendChild(item);
@@ -577,6 +684,26 @@ async function loadDocuments() {
 
         if (typeof populateDocumentDropdowns === 'function') {
             populateDocumentDropdowns();
+        }
+
+        // Populate the chat-doc-select dropdown
+        const chatDocSelect = document.getElementById('chat-doc-select');
+        if (chatDocSelect) {
+            const prevVal = chatDocSelect.value;
+            // Keep the 'All Documents' first option
+            chatDocSelect.innerHTML = '<option value="">All Documents</option>';
+            docs.forEach(doc => {
+                const opt = document.createElement('option');
+                opt.value = doc.doc_name;
+                opt.textContent = doc.doc_name.length > 40 ? doc.doc_name.substring(0, 40) + '...' : doc.doc_name;
+                chatDocSelect.appendChild(opt);
+            });
+            // If only one doc, auto-select it
+            if (docs.length === 1) {
+                chatDocSelect.value = docs[0].doc_name;
+            } else if (docs.some(d => d.doc_name === prevVal)) {
+                chatDocSelect.value = prevVal;
+            }
         }
     } catch (e) {
         console.error('Failed to load document list:', e);
@@ -641,10 +768,18 @@ async function sendQuery() {
     appendTypingIndicator();
 
     try {
+        // Get selected doc_name for targeted RAG search
+        const chatDocSelect = document.getElementById('chat-doc-select');
+        const selectedDocName = chatDocSelect ? chatDocSelect.value : '';
+
         const res = await fetch('/api/chat', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ query, history: state.chatHistory })
+            body:    JSON.stringify({ 
+                query, 
+                history: state.chatHistory,
+                doc_name: selectedDocName || null
+            })
         });
 
         removeTypingIndicator();
@@ -879,33 +1014,49 @@ window.switchTab = function(tab) {
     
     const tabChat = document.getElementById('tab-chat');
     const tabInsights = document.getElementById('tab-insights');
+    const tabMindmap = document.getElementById('tab-mindmap');
     const chatMessages = document.getElementById('chat-messages');
     const chatInputArea = document.getElementById('chat-input-container');
     const insightsView = document.getElementById('insights-view');
+    const mindmapView = document.getElementById('mindmap-view');
     
     if (!tabChat || !tabInsights || !chatMessages || !chatInputArea || !insightsView) return;
     
+    // Hide all first
+    tabChat.classList.remove('active');
+    tabInsights.classList.remove('active');
+    if (tabMindmap) tabMindmap.classList.remove('active');
+    
+    chatMessages.classList.add('hidden');
+    chatInputArea.classList.add('hidden');
+    insightsView.classList.add('hidden');
+    if (mindmapView) mindmapView.classList.add('hidden');
+    
     if (tab === 'chat') {
         tabChat.classList.add('active');
-        tabInsights.classList.remove('active');
         chatMessages.classList.remove('hidden');
         chatInputArea.classList.remove('hidden');
-        insightsView.classList.add('hidden');
-    } else {
-        tabChat.classList.remove('active');
+    } else if (tab === 'insights') {
         tabInsights.classList.add('active');
-        chatMessages.classList.add('hidden');
-        chatInputArea.classList.add('hidden');
         insightsView.classList.remove('hidden');
         
-        // Auto load insights if a document is selected in dropdown
         const select = document.getElementById('insight-doc-select');
         if (select && select.value) {
-            loadActiveDocInsights();
+            if (window.loadActiveDocInsights) window.loadActiveDocInsights();
         } else if (state.activeDocuments.length > 0 && select) {
-            // Default to first doc if none selected
             select.value = state.activeDocuments[0].doc_name;
-            loadActiveDocInsights();
+            if (window.loadActiveDocInsights) window.loadActiveDocInsights();
+        }
+    } else if (tab === 'mindmap') {
+        if (tabMindmap) tabMindmap.classList.add('active');
+        if (mindmapView) mindmapView.classList.remove('hidden');
+        
+        const select = document.getElementById('insight-doc-select');
+        if (select && select.value) {
+            if (window.loadMindMap) window.loadMindMap(select.value);
+        } else if (state.activeDocuments.length > 0 && select) {
+            select.value = state.activeDocuments[0].doc_name;
+            if (window.loadMindMap) window.loadMindMap(select.value);
         }
     }
 };
@@ -2498,7 +2649,6 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-<<<<<<< HEAD
 // ============================================================
 // VOICE INPUT — VoiceInputController
 // Uses the browser Web Speech API (no dependencies, no backend).
@@ -2732,6 +2882,180 @@ class VoiceInputController {
 
 // Instantiate once — hooks into DOMContentLoaded internally
 const voiceInput = new VoiceInputController();
-=======
 
->>>>>>> 0b277982b6513d3180ebb54eb7ade1cc6ba0fc9e
+// ============================================================
+// MIND MAP LOGIC
+// ============================================================
+
+window.loadMindMap = async function(docName) {
+    const container = document.getElementById('mindmap-container');
+    const emptyState = document.getElementById('mindmap-empty-state');
+    const loadingState = document.getElementById('mindmap-loading-state');
+    
+    if (emptyState) emptyState.classList.add('hidden');
+    if (container) container.style.display = 'none';
+    if (loadingState) loadingState.classList.remove('hidden');
+    
+    try {
+        const res = await fetch(`/api/documents/${encodeURIComponent(docName)}/mindmap`);
+        if (res.ok) {
+            const data = await res.json();
+            if (loadingState) loadingState.classList.add('hidden');
+            if (container) container.style.display = 'block';
+            window.renderMindMap(data);
+        } else {
+            throw new Error("Mind map not found or failed to load");
+        }
+    } catch (e) {
+        console.error("Mind map load error:", e);
+        if (loadingState) loadingState.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
+    }
+};
+
+window.renderMindMap = function(data) {
+    const container = document.getElementById('mindmap-container');
+    if (!container) return;
+    
+    // Transform JSON to Cytoscape elements
+    const elements = [];
+    if (data.nodes) {
+        data.nodes.forEach(n => {
+            elements.push({
+                data: { id: n.id, label: n.label, type: n.type }
+            });
+        });
+    }
+    if (data.edges) {
+        data.edges.forEach((e, i) => {
+            elements.push({
+                data: { id: 'e' + i, source: e.source, target: e.target }
+            });
+        });
+    }
+    
+    if (window.cy) {
+        window.cy.destroy();
+    }
+    
+    window.cy = cytoscape({
+        container: container,
+        elements: elements,
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'background-color': '#4a90e2',
+                    'label': 'data(label)',
+                    'color': '#fff',
+                    'text-valign': 'center',
+                    'text-halign': 'center',
+                    'font-size': '12px',
+                    'width': 'label',
+                    'height': 'label',
+                    'padding': '10px',
+                    'shape': 'round-rectangle'
+                }
+            },
+            {
+                selector: 'node[type="root"]',
+                style: {
+                    'background-color': '#e24a4a',
+                    'font-size': '16px',
+                    'font-weight': 'bold'
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 2,
+                    'line-color': '#ccc',
+                    'target-arrow-color': '#ccc',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
+        ],
+        layout: {
+            name: 'dagre',
+            rankDir: 'LR',
+            padding: 50
+        },
+        wheelSensitivity: 0.2
+    });
+    
+    window.cy.on('tap', 'node', function(evt) {
+        const node = evt.target;
+        const label = node.data('label');
+        
+        // Ask question in chat
+        switchTab('chat');
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+            chatInput.value = `Tell me about ${label}`;
+            chatInput.dispatchEvent(new Event('input'));
+            const chatForm = document.getElementById('chat-form');
+            if (chatForm) chatForm.requestSubmit();
+        }
+    });
+};
+
+window.regenerateMindMap = async function() {
+    const select = document.getElementById('insight-doc-select');
+    if (!select || !select.value) return;
+    
+    const docName = select.value;
+    const container = document.getElementById('mindmap-container');
+    const emptyState = document.getElementById('mindmap-empty-state');
+    const loadingState = document.getElementById('mindmap-loading-state');
+    
+    if (emptyState) emptyState.classList.add('hidden');
+    if (container) container.style.display = 'none';
+    if (loadingState) loadingState.classList.remove('hidden');
+    
+    try {
+        const res = await fetch(`/api/documents/${encodeURIComponent(docName)}/mindmap/regenerate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (loadingState) loadingState.classList.add('hidden');
+            if (container) container.style.display = 'block';
+            window.renderMindMap(data);
+        } else {
+            throw new Error("Failed to regenerate mind map");
+        }
+    } catch (e) {
+        console.error("Regenerate mind map error:", e);
+        if (loadingState) loadingState.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
+    }
+};
+
+window.exportMindMap = function() {
+    if (!window.cy) return;
+    const png64 = window.cy.png({ bg: '#ffffff' });
+    const a = document.createElement('a');
+    a.href = png64;
+    a.download = 'mindmap.png';
+    a.click();
+};
+
+// Hook document selection to update mindmap if tab is active
+const originalPopulate = window.populateDocumentDropdowns;
+window.populateDocumentDropdowns = function() {
+    if (originalPopulate) originalPopulate();
+    const select = document.getElementById('insight-doc-select');
+    if (select && !select.onchange_patched) {
+        const oldChange = select.onchange;
+        select.onchange = function(e) {
+            if (oldChange) oldChange.call(this, e);
+            if (state.activeTab === 'mindmap') {
+                window.loadMindMap(this.value);
+            }
+        };
+        select.onchange_patched = true;
+    }
+};

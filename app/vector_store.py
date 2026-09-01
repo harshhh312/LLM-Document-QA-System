@@ -73,13 +73,18 @@ class SimpleVectorStore:
             docs[doc_name]["chunk_count"] += 1
         return list(docs.values())
 
-    def similarity_search(self, query_embedding: List[float], top_k: int = 5) -> List[Dict[str, Any]]:
-        """Calculates cosine similarity and returns top_k matching chunks."""
+    def similarity_search(self, query_embedding: List[float], top_k: int = 7, doc_name: str = None, threshold: float = 0.2, query: str = None) -> List[Dict[str, Any]]:
+        """Calculates cosine similarity and returns top_k matching chunks. If query is provided, boosts matching doc names."""
         if not self.chunks:
             return []
 
+        # Filter by doc_name if provided
+        target_chunks = [c for c in self.chunks if c["doc_name"] == doc_name] if doc_name else self.chunks
+        if not target_chunks:
+            return []
+
         # Extract embeddings
-        embeddings = [chunk["embedding"] for chunk in self.chunks]
+        embeddings = [chunk["embedding"] for chunk in target_chunks]
         
         # Convert to numpy arrays for fast calculation
         emb_matrix = np.array(embeddings, dtype=np.float32)
@@ -97,17 +102,29 @@ class SimpleVectorStore:
 
         similarities = dot_products / norms
 
+        # Optional keyword boost for document names
+        if query:
+            query_words = [w for w in query.lower().split() if len(w) > 3]
+            for idx, chunk in enumerate(target_chunks):
+                doc_name_lower = chunk["doc_name"].lower()
+                boost = 0.0
+                for w in query_words:
+                    if w in doc_name_lower:
+                        boost += 0.15  # 15% boost per matching keyword
+                similarities[idx] += boost
+
         # Get top_k indices sorted descending
         top_indices = np.argsort(similarities)[::-1][:top_k]
 
         results = []
         for idx in top_indices:
             score = float(similarities[idx])
-            chunk_copy = self.chunks[idx].copy()
-            # Remove embedding from returned results to save network bandwidth
-            if "embedding" in chunk_copy:
-                del chunk_copy["embedding"]
-            chunk_copy["similarity"] = score
-            results.append(chunk_copy)
+            if score >= threshold:
+                chunk_copy = target_chunks[idx].copy()
+                # Remove embedding from returned results to save network bandwidth
+                if "embedding" in chunk_copy:
+                    del chunk_copy["embedding"]
+                chunk_copy["similarity"] = score
+                results.append(chunk_copy)
 
         return results

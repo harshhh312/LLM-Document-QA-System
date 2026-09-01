@@ -266,7 +266,7 @@ class RAGEngine:
             "added_at": added_at
         }
 
-    def chat_query(self, query: str, chat_history: List[Dict[str, str]] = None) -> Tuple[str, List[Dict[str, Any]]]:
+    def chat_query(self, query: str, chat_history: List[Dict[str, str]] = None, doc_name: str = None) -> Tuple[str, List[Dict[str, Any]]]:
         """Queries the vector store for context and calls LLM (Gemini or Ollama) for an answer."""
         settings = Config.get_settings()
         temperature = settings["temperature"]
@@ -284,27 +284,44 @@ class RAGEngine:
             raise ValueError(f"Embedding query failed with Ollama: {str(e)}. Ensure Ollama is running and model '{emb_model}' is available.")
 
         # 2. Search similarity in Vector Store
-        retrieved_chunks = self.vector_store.similarity_search(query_embedding, top_k=5)
+        retrieved_chunks = self.vector_store.similarity_search(query_embedding, top_k=7, doc_name=doc_name, query=query)
         
+        print(f"[DEBUG] chat_query for '{query}', doc_name='{doc_name}'")
+        print(f"[DEBUG] retrieved_chunks count: {len(retrieved_chunks)}")
+        for i, c in enumerate(retrieved_chunks):
+            print(f"  Chunk {i}: score={c.get('similarity', 0):.4f}, doc={c['doc_name']}, len={len(c['text'])}")
+
+        if not retrieved_chunks:
+            fallback = "I couldn't find relevant information in the document. Please rephrase your question or check if the document was uploaded successfully."
+            print(f"[DEBUG] Fallback triggered for query: '{query}'")
+            return fallback, []
+
         # 3. Build context string
         context_str = ""
-        if retrieved_chunks:
-            for idx, chunk in enumerate(retrieved_chunks):
-                context_str += f"[Source {idx+1}] File: {chunk['doc_name']}, Page: {chunk['metadata'].get('page', 1)}\n"
-                context_str += f"Content: {chunk['text']}\n\n"
-        else:
-            context_str = "No relevant documents have been uploaded or found for this query. Advise the user to upload documents."
+        for idx, chunk in enumerate(retrieved_chunks):
+            context_str += f"[Source {idx+1}] File: {chunk['doc_name']}, Page: {chunk['metadata'].get('page', 1)}\n"
+            context_str += f"Content: {chunk['text']}\n\n"
 
         # 4. Prepare prompt & calling LLM
         # Ollama chat completion
         chat_model = settings.get("ollama_chat_model", "llama3.2")
         base_url = settings.get("ollama_base_url", "http://localhost:11434")
         
-        system_prompt = """You are a professional AI Assistant specializing in document QA. \nAnswer the User Query using the provided context from the user's uploaded documents.\n\nGuidelines:\n1. Try to be very specific and factual. Rely primarily on the provided document context.\n2. If the answer is in the context, synthesize a clear, helpful response. Cite the file name and page number of your sources (e.g., \"According to [filename.pdf] (Page X)...\").\n3. If the answer cannot be found in the context but is a general question or related, answer it using your general knowledge, but clearly state: \"[General Knowledge Notice] This answer is based on general knowledge, as the uploaded documents do not contain this information.\"\n4. If there are no uploaded documents, politely inform the user they can upload documents via the panel on the left."""
-        
+        system_prompt = (
+            "You are a professional AI Assistant specializing in document QA.\n"
+            "Answer the User Query using the provided context from the user's uploaded documents.\n\n"
+            "Guidelines:\n"
+            "1. Try to be very specific and factual. Rely primarily on the provided document context.\n"
+            "2. If the answer is in the context, synthesize a clear, helpful response. "
+            "Cite the file name and page number of your sources (e.g., 'According to [filename.pdf] (Page X)...').\n"
+            "3. If the answer cannot be found in the context but is a general question, answer it using your general knowledge "
+            "but clearly state: '[General Knowledge Notice] This answer is based on general knowledge, as the uploaded documents do not contain this information.'\n"
+            "4. If there are no uploaded documents, politely inform the user they can upload documents via the panel on the left.\n\n"
+            f"--- DOCUMENT CONTEXT START ---\n{context_str}\n--- DOCUMENT CONTEXT END ---"
+        )
+
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "system", "content": f"--- DOCUMENT CONTEXT START ---\n{context_str}\n--- DOCUMENT CONTEXT END ---"}
         ]
         
         if chat_history:
@@ -312,6 +329,8 @@ class RAGEngine:
                 messages.append({"role": msg["role"], "content": msg["content"]})
         
         messages.append({"role": "user", "content": query})
+        
+        print(f"[DEBUG] Sending {len(retrieved_chunks)} context chunks to LLM ({len(context_str)} chars) for query: '{query[:80]}'")
         
         try:
             # Ensure chat model is available

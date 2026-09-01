@@ -1,0 +1,33 @@
+{
+  "doc_name": "Harsh_Resume.pdf",
+  "statistics": {
+    "total_pages": 1,
+    "total_words": 3859,
+    "total_characters": 8961,
+    "reading_time_min": 19,
+    "readability_score": 16.4,
+    "readability_label": "Very Difficult (College Graduate)",
+    "language": "English",
+    "file_size": "62.3 KB",
+    "added_at": "2026-07-23 23:14"
+  },
+  "keywords": [],
+  "summary": "",
+  "key_points": [],
+  "topics": [],
+  "entities": {
+    "people": [],
+    "organizations": [],
+    "dates": [],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective"
+    ],
+    "sections": []
+  }
+}

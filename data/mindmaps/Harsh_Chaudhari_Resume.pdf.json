@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {
+      "id": "root",
+      "label": "Document Title",
+      "type": "root",
+      "page": 1
+    },
+    {
+      "id": "node1",
+      "label": "Topic 1",
+      "type": "topic",
+      "page": 1
+    },
+    {
+      "id": "node2",
+      "label": "Subtopic 1.1",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node1"
+    },
+    {
+      "id": "node3",
+      "label": "Concept 1.1.1",
+      "type": "concept",
+      "page": 1,
+      "parent": "node2"
+    },
+    {
+      "id": "node4",
+      "label": "Topic 2",
+      "type": "topic",
+      "page": 2
+    },
+    {
+      "id": "node5",
+      "label": "Subtopic 2.1",
+      "type": "subtopic",
+      "page": 2,
+      "parent": "node4"
+    },
+    {
+      "id": "node6",
+      "label": "Concept 2.1.1",
+      "type": "concept",
+      "page": 2,
+      "parent": "node5"
+    }
+  ],
+  "edges": [
+    {
+      "source": "root",
+      "target": "node1"
+    },
+    {
+      "source": "node1",
+      "target": "node2"
+    },
+    {
+      "source": "node2",
+      "target": "node3"
+    },
+    {
+      "source": "root",
+      "target": "node4"
+    },
+    {
+      "source": "node4",
+      "target": "node5"
+    },
+    {
+      "source": "node5",
+      "target": "node6"
+    }
+  ],
+  "doc_name": "Harsh_Chaudhari_Resume.pdf"
+}

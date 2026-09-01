@@ -12,9 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js for visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Cytoscape for Mind Map -->
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre/cytoscape-dagre.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/explorer.css">
+    
 </head>
 <body>
     <!-- Connection Warning Banner -->
@@ -46,15 +51,39 @@
                         <h3><i class="fa-solid fa-folder-open"></i> Documents</h3>
                     </div>
                     
-                    <!-- Drag & Drop Zone -->
+                    <!-- Drag & Drop Zone (UPDATED) -->
                     <div id="drop-zone" class="drop-zone">
                         <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
                         <p class="drop-text">Drag & drop files here</p>
-                        <p class="drop-subtext">Supports PDF, TXT, MD (Max 10MB)</p>
+                        <p class="drop-subtext">Supports PDF, DOCX, PPTX, XLSX, MD, TXT, Images (OCR), and URLs</p>
+                        
+                        <!-- Format Badges -->
+                        <div class="format-badges" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 12px 0;">
+                            <span class="badge" style="background: #fc8181; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">PDF</span>
+                            <span class="badge" style="background: #4299e1; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">DOCX</span>
+                            <span class="badge" style="background: #f6ad55; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">PPTX</span>
+                            <span class="badge" style="background: #48bb78; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">XLSX</span>
+                            <span class="badge" style="background: #9f7aea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">MD</span>
+                            <span class="badge" style="background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">URL</span>
+                            <span class="badge" style="background: #e53e3e; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">YouTube</span>
+                            <span class="badge" style="background: #ed64a6; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px;">Image</span>
+                        </div>
+
                         <label for="file-input" class="btn btn-outline btn-sm file-label">
                             Browse Files
                         </label>
-                        <input type="file" id="file-input" multiple accept=".pdf,.txt,.md,.markdown" style="display: none;">
+                        <input type="file" id="file-input" multiple 
+                               accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls,.md,.txt,.jpg,.jpeg,.png,.bmp,.tiff" style="display: none;">
+
+                        <!-- URL / YouTube Input -->
+                        <div class="url-input-group" style="display: flex; gap: 8px; width: 100%; margin: 12px 0;">
+                            <input type="text" id="url-input" placeholder="Paste a URL or YouTube link..." 
+                                   style="flex: 1; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                            <button id="process-url-btn" 
+                                    style="padding: 10px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                Process
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Progress indicator -->
@@ -263,6 +292,9 @@
                         <button id="tab-insights" class="tab-btn" onclick="switchTab('insights')">
                             <i class="fa-solid fa-chart-pie"></i> Document Insights
                         </button>
+                        <button id="tab-mindmap" class="tab-btn" onclick="switchTab('mindmap')">
+                            <i class="fa-solid fa-diagram-project"></i> Mind Map
+                        </button>
                     </div>
                 </div>
                 <div class="nav-status">
@@ -301,6 +333,15 @@
 
             <!-- Chat Input Area (Fixed at bottom) -->
             <div id="chat-input-container" class="chat-input-area">
+                <!-- Active Document Selector -->
+                <div class="chat-doc-selector-row">
+                    <label for="chat-doc-select" class="chat-doc-label">
+                        <i class="fa-solid fa-file-lines"></i> Searching in:
+                    </label>
+                    <select id="chat-doc-select" class="chat-doc-select">
+                        <option value="">All Documents</option>
+                    </select>
+                </div>
                 <div class="chat-actions">
                     <button id="clear-chat-btn" class="icon-btn-text" title="Clear chat history">
                         <i class="fa-solid fa-trash-can"></i> Clear Chat
@@ -671,6 +712,41 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Mind Map View Container -->
+            <div id="mindmap-view" class="mindmap-container hidden">
+                <div class="insights-dashboard-header">
+                    <div class="insights-controls">
+                        <div class="control-group">
+                            <h3><i class="fa-solid fa-diagram-project"></i> Interactive Mind Map</h3>
+                        </div>
+                        <div class="btn-group-dashboard">
+                            <button id="btn-regenerate-mindmap" class="btn btn-outline btn-sm" onclick="regenerateMindMap()">
+                                <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+                            </button>
+                            <button id="btn-export-mindmap" class="btn btn-outline btn-sm" onclick="exportMindMap()">
+                                <i class="fa-solid fa-download"></i> Export PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="mindmap-loading-state" class="insights-loading-state hidden">
+                    <div class="loading-spinner">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    </div>
+                    <h3>Generating Mind Map...</h3>
+                    <p>Extracting hierarchical structure. This may take up to a minute.</p>
+                </div>
+                
+                <div id="mindmap-empty-state" class="insights-empty-state">
+                    <i class="fa-solid fa-diagram-project empty-state-icon"></i>
+                    <h3>No Mind Map Available</h3>
+                    <p>Select a document or click regenerate.</p>
+                </div>
+                
+                <div id="mindmap-container" style="height: 600px; width: 100%; border-radius: 8px; background: var(--bg-surface); overflow: hidden; display: none;"></div>
             </div>
             </main>
         </div>

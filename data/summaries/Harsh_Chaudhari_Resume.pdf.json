@@ -1,0 +1,66 @@
+{
+  "doc_name": "Harsh_Chaudhari_Resume.pdf",
+  "statistics": {
+    "total_pages": 1,
+    "total_words": 3954,
+    "total_characters": 9152,
+    "reading_time_min": 20,
+    "readability_score": 26.7,
+    "readability_label": "Very Difficult (College Graduate)",
+    "language": "English",
+    "file_size": "59.1 KB",
+    "added_at": "2026-07-23 23:14"
+  },
+  "keywords": [],
+  "summary": "This is an automatically generated insights dashboard fallback for the document 'Harsh_Chaudhari_Resume.pdf'. The local LLM was either busy or failed to return a valid JSON structure within the expected time. Basic file analytics are computed below.\n\n",
+  "key_points": [
+    {
+      "point": "Calculated document readability indicators programmatically.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "Calculated word, character, and sentence counts.",
+      "score": "Medium",
+      "page": 1
+    },
+    {
+      "point": "Ready for chat questions. Use the chat window to ask details about this document.",
+      "score": "High",
+      "page": 1
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Document Content",
+      "percentage": 100,
+      "mentions": 42,
+      "keywords": [
+        "document",
+        "text",
+        "file"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [],
+    "dates": [],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective"
+    ],
+    "sections": [
+      {
+        "section": "Full Document",
+        "sentiment": "Neutral",
+        "reason": "No text anomalies detected."
+      }
+    ]
+  }
+}

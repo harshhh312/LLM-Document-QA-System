@@ -1,0 +1,127 @@
+{
+  "doc_name": "Capgemini Loi.pdf",
+  "statistics": {
+    "total_pages": 8,
+    "total_words": 3846,
+    "total_characters": 25031,
+    "reading_time_min": 19,
+    "readability_score": 36.3,
+    "readability_label": "Difficult (College)",
+    "language": "English",
+    "file_size": "107.8 KB",
+    "added_at": "2026-08-15 15:44"
+  },
+  "keywords": [
+    {
+      "word": "capgemini",
+      "count": 68
+    },
+    {
+      "word": "company",
+      "count": 52
+    },
+    {
+      "word": "training",
+      "count": 44
+    },
+    {
+      "word": "onboarding",
+      "count": 40
+    },
+    {
+      "word": "terms",
+      "count": 28
+    },
+    {
+      "word": "program",
+      "count": 26
+    },
+    {
+      "word": "required",
+      "count": 22
+    },
+    {
+      "word": "time",
+      "count": 22
+    },
+    {
+      "word": "employment",
+      "count": 22
+    },
+    {
+      "word": "limited",
+      "count": 20
+    },
+    {
+      "word": "process",
+      "count": 20
+    },
+    {
+      "word": "india",
+      "count": 18
+    },
+    {
+      "word": "subject",
+      "count": 18
+    },
+    {
+      "word": "offer",
+      "count": 18
+    },
+    {
+      "word": "conditions",
+      "count": 16
+    }
+  ],
+  "summary": "This is an automatically generated insights dashboard fallback for the document 'Capgemini Loi.pdf'. The local LLM was either busy or failed to return a valid JSON structure within the expected time. Basic file analytics are computed below.\n\n",
+  "key_points": [
+    {
+      "point": "Calculated document readability indicators programmatically.",
+      "score": "High",
+      "page": 1
+    },
+    {
+      "point": "Calculated word, character, and sentence counts.",
+      "score": "Medium",
+      "page": 1
+    },
+    {
+      "point": "Ready for chat questions. Use the chat window to ask details about this document.",
+      "score": "High",
+      "page": 1
+    }
+  ],
+  "topics": [
+    {
+      "topic": "Document Content",
+      "percentage": 100,
+      "mentions": 193,
+      "keywords": [
+        "document",
+        "text",
+        "file"
+      ]
+    }
+  ],
+  "entities": {
+    "people": [],
+    "organizations": [],
+    "dates": [],
+    "locations": [],
+    "monetary_values": []
+  },
+  "sentiment": {
+    "overall": "Neutral",
+    "score": 0.0,
+    "tones": [
+      "Objective"
+    ],
+    "sections": [
+      {
+        "section": "Full Document",
+        "sentiment": "Neutral",
+        "reason": "No text anomalies detected."
+      }
+    ]
+  }
+}

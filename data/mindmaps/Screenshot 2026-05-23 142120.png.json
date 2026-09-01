@@ -1,0 +1,173 @@
+{
+  "nodes": [
+    {
+      "id": "root",
+      "label": "Document Title",
+      "type": "root",
+      "page": 1
+    },
+    {
+      "id": "node1",
+      "label": "ae",
+      "type": "topic",
+      "page": 1
+    },
+    {
+      "id": "node2",
+      "label": "@ Batteries",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node1"
+    },
+    {
+      "id": "node3",
+      "label": "& Bluetooth",
+      "type": "concept",
+      "page": 1,
+      "parent": "node1"
+    },
+    {
+      "id": "node4",
+      "label": "® Cameras",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node1"
+    },
+    {
+      "id": "node5",
+      "label": "¥ BW computer",
+      "type": "concept",
+      "page": 1,
+      "parent": "node2"
+    },
+    {
+      "id": "node6",
+      "label": "ACPI x64-based PC",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node5"
+    },
+    {
+      "id": "node7",
+      "label": "GB enovo ss0v",
+      "type": "concept",
+      "page": 1,
+      "parent": "node5"
+    },
+    {
+      "id": "node8",
+      "label": "smi Disk drives v GB",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node5"
+    },
+    {
+      "id": "node9",
+      "label": "Display adapters",
+      "type": "concept",
+      "page": 1,
+      "parent": "node6"
+    },
+    {
+      "id": "node10",
+      "label": "Intel(R) UHD Graphics",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node9"
+    },
+    {
+      "id": "node11",
+      "label": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "type": "concept",
+      "page": 1,
+      "parent": "node9"
+    },
+    {
+      "id": "node12",
+      "label": "BE Firmware",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node5"
+    },
+    {
+      "id": "node13",
+      "label": "§j Human Interface Devices",
+      "type": "concept",
+      "page": 1,
+      "parent": "node2"
+    },
+    {
+      "id": "node14",
+      "label": "BIDE ATAVATAPI controllers",
+      "type": "subtopic",
+      "page": 1,
+      "parent": "node13"
+    },
+    {
+      "id": "node15",
+      "label": "EB Keyboards",
+      "type": "concept",
+      "page": 1,
+      "parent": "node13"
+    }
+  ],
+  "edges": [
+    {
+      "source": "root",
+      "target": "node1"
+    },
+    {
+      "source": "node1",
+      "target": "node2"
+    },
+    {
+      "source": "node1",
+      "target": "node3"
+    },
+    {
+      "source": "node1",
+      "target": "node4"
+    },
+    {
+      "source": "node2",
+      "target": "node5"
+    },
+    {
+      "source": "node2",
+      "target": "node13"
+    },
+    {
+      "source": "node5",
+      "target": "node6"
+    },
+    {
+      "source": "node5",
+      "target": "node7"
+    },
+    {
+      "source": "node5",
+      "target": "node8"
+    },
+    {
+      "source": "node6",
+      "target": "node9"
+    },
+    {
+      "source": "node9",
+      "target": "node10"
+    },
+    {
+      "source": "node9",
+      "target": "node11"
+    },
+    {
+      "source": "node13",
+      "target": "node14"
+    },
+    {
+      "source": "node13",
+      "target": "node15"
+    }
+  ],
+  "doc_name": "Screenshot 2026-05-23 142120.png"
+}

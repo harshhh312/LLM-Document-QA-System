@@ -87,6 +87,6 @@ Docker support
 User authentication
 
 ## Author
-Harsh Chaudhari
 
-Portfolio · LinkedIn · GitHub
+**Harsh Chaudhari**  
+[Portfolio](https://harsh-chaudhari.vercel.app) · [LinkedIn](https://linkedin.com/in/harsh-chaudhari312) · [GitHub](https://github.com/harshhh312)

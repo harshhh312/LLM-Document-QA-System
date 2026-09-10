@@ -56,9 +56,13 @@ pip install -r requirements.txt
 cp .env.example .env            # then edit .env
 
 **Run**
+
 python run.py
+
 Open → http://localhost:8000
+
 **Project Structure**
+
 textapp/
 ├── main.py                 # FastAPI app
 

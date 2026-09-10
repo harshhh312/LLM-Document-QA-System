@@ -73,7 +73,7 @@ data/                       # Uploads & vector store (gitignored)
 .Docker support
 .User authentication
 
-Author
+**Author**
 Harsh Chaudhari
 
 

@@ -63,17 +63,18 @@ python run.py
 
 Open → http://localhost:8000
 
-Project Structure
-textapp/
-├── main.py                 # FastAPI app
-├── config.py               # Settings & provider config
-├── document_processor.py   # Multi-format extraction
-├── rag.py                  # RAG engine
-├── vector_store.py         # Custom vector store
-├── summarizer.py
-└── routers/                # Mind-map etc.
-static/                     # Frontend
-data/                       # Uploads & vector store (gitignored)
+## Project Structure
+
+├── app/
+│   ├── main.py                 # FastAPI app
+│   ├── config.py               # Settings & provider config
+│   ├── document_processor.py   # Multi-format extraction
+│   ├── rag.py                  # RAG engine
+│   ├── vector_store.py         # Custom vector store
+│   ├── summarizer.py
+│   └── routers/                # Mind-map etc.
+├── static/                     # Frontend
+└── data/                       # Uploads & vector store (gitignored)
 
 **Future Improvements**
 

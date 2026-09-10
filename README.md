@@ -80,11 +80,11 @@ data/                     # Uploads & vector store (gitignored)
 ```
 ## Future Improvements
 
-Replace custom store with FAISS / Chroma
-Add LangChain integration option
-Better evaluation metrics (retrieval accuracy)
-Docker support
-User authentication
+- Replace custom store with FAISS / Chroma
+- Add LangChain integration option
+- Better evaluation metrics (retrieval accuracy)
+- Docker support
+- User authentication
 
 ## Author
 

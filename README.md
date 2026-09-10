@@ -53,4 +53,37 @@ source venv/bin/activate        # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 cp .env.example .env            # then edit .env
+```
 
+### Run
+
+```bash
+python run.py
+```
+
+Open → http://localhost:8000
+
+Project Structure
+textapp/
+├── main.py                 # FastAPI app
+├── config.py               # Settings & provider config
+├── document_processor.py   # Multi-format extraction
+├── rag.py                  # RAG engine
+├── vector_store.py         # Custom vector store
+├── summarizer.py
+└── routers/                # Mind-map etc.
+static/                     # Frontend
+data/                       # Uploads & vector store (gitignored)
+
+**Future Improvements**
+
+Replace custom store with FAISS / Chroma
+Add LangChain integration option
+Better evaluation metrics (retrieval accuracy)
+Docker support
+User authentication
+
+**Author**
+Harsh Chaudhari
+
+Portfolio · LinkedIn · GitHub

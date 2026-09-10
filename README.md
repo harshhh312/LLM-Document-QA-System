@@ -42,13 +42,17 @@ User Query → Embedding → Similarity Search → Context + LLM → Answer
 - (Optional) Gemini API key
 
 ### Installation
+
 git clone https://github.com/harshhh312/LLM-Document-QA-System.git
+
 cd LLM-Document-QA-System
 
 python -m venv venv
+
 source venv/bin/activate        # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
+
 cp .env.example .env            # then edit .env
 
 **Run**
@@ -57,11 +61,17 @@ Open → http://localhost:8000
 **Project Structure**
 textapp/
 ├── main.py                 # FastAPI app
+
 ├── config.py               # Settings & provider config
+
 ├── document_processor.py   # Multi-format extraction
+
 ├── rag.py                  # RAG engine
+
 ├── vector_store.py         # Custom vector store
+
 ├── summarizer.py
+
 └── routers/                # Mind-map etc.
 static/                     # Frontend
 data/                       # Uploads & vector store (gitignored)

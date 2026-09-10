@@ -65,7 +65,7 @@ Open → http://localhost:8000
 
 ## Project Structure
 
-├── app/
+── app/
 │   ├── main.py                 # FastAPI app
 │   ├── config.py               # Settings & provider config
 │   ├── document_processor.py   # Multi-format extraction

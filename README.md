@@ -65,18 +65,20 @@ Open → http://localhost:8000
 
 ## Project Structure
 
-── app/
-│   ├── main.py                 # FastAPI app
-│   ├── config.py               # Settings & provider config
-│   ├── document_processor.py   # Multi-format extraction
-│   ├── rag.py                  # RAG engine
-│   ├── vector_store.py         # Custom vector store
-│   ├── summarizer.py
-│   └── routers/                # Mind-map etc.
-├── static/                     # Frontend
-└── data/                       # Uploads & vector store (gitignored)
+```text
+app/
+  main.py                 # FastAPI app
+  config.py               # Settings & provider config
+  document_processor.py   # Multi-format extraction
+  rag.py                  # RAG engine
+  vector_store.py         # Custom vector store
+  summarizer.py
+  routers/                # Mind-map etc.
 
-**Future Improvements**
+static/                   # Frontend
+data/                     # Uploads & vector store (gitignored)
+```
+## Future Improvements
 
 Replace custom store with FAISS / Chroma
 Add LangChain integration option
@@ -84,7 +86,7 @@ Better evaluation metrics (retrieval accuracy)
 Docker support
 User authentication
 
-**Author**
+## Author
 Harsh Chaudhari
 
 Portfolio · LinkedIn · GitHub
